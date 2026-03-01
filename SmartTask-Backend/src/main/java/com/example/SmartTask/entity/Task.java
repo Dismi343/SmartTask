@@ -2,10 +2,7 @@ package com.example.SmartTask.entity;
 
 import com.example.SmartTask.enums.TaskEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.apachecommons.CommonsLog;
 
 import java.time.LocalDateTime;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity(name="tasks")
 public class Task {
     @Id

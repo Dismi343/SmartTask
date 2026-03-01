@@ -1,14 +1,12 @@
 package com.example.SmartTask.dto.response.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ResponseUserDto {
     private String user_id;
     private String userName;
