@@ -1,13 +1,17 @@
 package com.example.SmartTask.service.serviceimpl;
 
 import com.example.SmartTask.dto.request.RequestUserDto;
+import com.example.SmartTask.dto.response.paginate.PaginateTaskDto;
 import com.example.SmartTask.dto.response.paginate.PaginateUserDto;
 import com.example.SmartTask.dto.response.response.ResponseUserDto;
+import com.example.SmartTask.entity.Task;
 import com.example.SmartTask.entity.User;
 import com.example.SmartTask.exception.EntryNotFoundException;
 import com.example.SmartTask.repository.UserRepo;
 import com.example.SmartTask.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,7 +54,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PaginateUserDto searchAllUser(String searchText, int page, int size) {
-        return null;
+        Page<User> userList=userRepo.searchAll(searchText, PageRequest.of(page, size));
+        return PaginateUserDto.builder()
+                .dataList(
+                        userList.stream().map(e -> toResponseUserDto(e)).toList()
+                )
+                .count(userList.getTotalElements())
+                .build();
     }
 
     private User toUser(RequestUserDto dto){

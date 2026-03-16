@@ -2,10 +2,7 @@ package com.example.SmartTask.dto.response.response;
 
 import com.example.SmartTask.entity.Task;
 import com.example.SmartTask.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,6 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ResponseProjectDto {
     private String project_id;
     private String projectName;
