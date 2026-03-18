@@ -35,7 +35,7 @@ public ResponseEntity<StandardResponseDto> findById(
             ), HttpStatus.OK
     );
 }
-@PostMapping("/update-user/{id}")
+@PutMapping("/update-user/{id}")
 public ResponseEntity<StandardResponseDto> updateById(
         @PathVariable String id,
         @RequestBody RequestUserDto dto

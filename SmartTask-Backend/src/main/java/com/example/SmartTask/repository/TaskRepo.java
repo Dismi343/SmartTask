@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface TaskRepo extends JpaRepository<Task,String> {
-    @Query(value = "SELECT * FROM tasks WHERE taskTitle LIKE %?1% ", nativeQuery=true)
+    @Query(value = "SELECT * FROM tasks WHERE task_title LIKE %?1% ", nativeQuery=true)
     Page<Task> searchAll(String searchText, Pageable pageable);
 }

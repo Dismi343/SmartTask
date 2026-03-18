@@ -15,19 +15,19 @@ import java.util.List;
 @Entity(name="projects")
 public class Project {
     @Id
-    @Column(name="projectId", nullable = false)
+    @Column(name="project_id", nullable = false)
     private String project_id;
-    @Column(name="projectName",length=45, nullable = false)
+    @Column(name="project_name",length=45, nullable = false)
     private String projectName;
     @Column(name="description",length=255, nullable = false)
     private String description;
-    @Column(name="startDate",length=45, nullable = false)
+    @Column(name="start_date",length=45, nullable = false)
     private LocalDate startDate;
-    @Column(name="endDate",length=45, nullable = false)
+    @Column(name="end_date",length=45, nullable = false)
     private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn(name= "userId", nullable = false)
+    @JoinColumn(name= "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "project")
