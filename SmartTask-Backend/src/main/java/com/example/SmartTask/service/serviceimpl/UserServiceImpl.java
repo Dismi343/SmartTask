@@ -8,6 +8,7 @@ import com.example.SmartTask.entity.Task;
 import com.example.SmartTask.entity.User;
 import com.example.SmartTask.exception.EntryNotFoundException;
 import com.example.SmartTask.repository.UserRepo;
+import com.example.SmartTask.service.JwtService;
 import com.example.SmartTask.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,12 +19,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.net.PasswordAuthentication;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
+    private final JwtService jwtService;
 
     @Override
     public void saveUser(RequestUserDto dto) {
@@ -62,12 +65,29 @@ public class UserServiceImpl implements UserService {
                 .count(userList.getTotalElements())
                 .build();
     }
+    @Override
+    public String userLogin(String email,String password){
+        Optional<User> user=findUserByEmail(email);
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(user.isEmpty()) {
+            throw new EntryNotFoundException("User not found");
+        }
+        if(user.get().getEmail().equals(email) && encoder.matches(password, user.get().getPassword())) {
+            return jwtService.generateToken(email); // Return JWT
+
+        }
+        throw new EntryNotFoundException("Invalid credentials");
+    }
 
     private User toUser(RequestUserDto dto){
         if(dto==null) return null;
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(16);
         String rawPassword = dto.getPassword();
         String hashedPassword= passwordEncoder.encode(rawPassword);
+        Optional<User> existingUser=findUserByEmail(dto.getEmail());
+        if (existingUser.isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         return User.builder()
                 .user_id(UUID.randomUUID().toString())
                 .username(dto.getUsername())
@@ -86,5 +106,10 @@ public class UserServiceImpl implements UserService {
                 .password(user.getPassword())
                 .role(user.getRole())
                 .build();
+    }
+
+    private Optional<User> findUserByEmail(String email){
+        return userRepo.findByEmail(email);
+
     }
 }

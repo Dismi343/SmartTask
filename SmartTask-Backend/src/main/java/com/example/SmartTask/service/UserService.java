@@ -10,4 +10,5 @@ public interface UserService {
     public void updateUser(RequestUserDto dto,String user_id);
     public ResponseUserDto findUserById(String user_id);
     public PaginateUserDto searchAllUser(String searchText,int page, int size);
+    public String userLogin(String email, String password);
 }
