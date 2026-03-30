@@ -2,10 +2,7 @@ package com.example.SmartTask.entity;
 
 import com.example.SmartTask.enums.TaskEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.apachecommons.CommonsLog;
 
 import java.time.LocalDateTime;
@@ -14,12 +11,13 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity(name="tasks")
 public class Task {
     @Id
-    @Column(name="taskId", nullable = false)
+    @Column(name="task_id", nullable = false)
     private String task_id;
-    @Column(name="taskTitle",length=45, nullable = false)
+    @Column(name="task_title",length=45, nullable = false)
     private String taskTitle;
     @Column(name="status", nullable = false)
     private Enum<TaskEnum.Status> status;
@@ -29,6 +27,6 @@ public class Task {
     private LocalDateTime deadline;
 
     @ManyToOne
-    @JoinColumn(name= "projectId", nullable = false)
+    @JoinColumn(name= "project_id", nullable = false)
     private Project project;
 }

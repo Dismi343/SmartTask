@@ -2,15 +2,13 @@ package com.example.SmartTask.dto.response.response;
 
 
 import com.example.SmartTask.entity.Project;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ResponseTaskDto {
     private String task_id;
     private String taskTitle;
