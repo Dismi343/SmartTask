@@ -1,6 +1,8 @@
 package com.example.SmartTask.api;
 
 import com.example.SmartTask.dto.request.RequestLoginDto;
+import com.example.SmartTask.dto.response.response.LoginResponseDto;
+import com.example.SmartTask.dto.response.response.ResponseUserDto;
 import com.example.SmartTask.entity.User;
 import com.example.SmartTask.repository.UserRepo;
 import com.example.SmartTask.service.JwtService;
@@ -22,10 +24,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<StandardResponseDto> login(@RequestBody RequestLoginDto loginDto) {
         String token= userService.userLogin(loginDto.getEmail(), loginDto.getPassword());
+        ResponseUserDto user=userService.findByEmail(loginDto.getEmail());
+        LoginResponseDto loginResponse = new LoginResponseDto(token, user);
 
-            return new ResponseEntity<>(
+        return new ResponseEntity<>(
                     new StandardResponseDto(
-                            "Login successful",200,token
+                            "Login successful",200,loginResponse
                     ), HttpStatus.OK
             );
     }

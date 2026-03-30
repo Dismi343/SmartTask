@@ -1,0 +1,267 @@
+@import "tailwindcss";
+
+/* ─── Tailwind v4 Theme Expansion ─────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-syne: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'DM Sans', sans-serif;
+
+  /* Custom color palette */
+  --color-void: #070810;
+  --color-abyss: #0d0f1a;
+  --color-deep: #12152b;
+  --color-surface: #1a1e35;
+  --color-elevated: #222740;
+  --color-border: #2d3355;
+  --color-muted: #3d4470;
+  --color-ghost: #6b75b0;
+  --color-dim: #9098c8;
+  --color-soft: #b8bedd;
+  --color-bright: #e2e5f5;
+  --color-white: #f0f2ff;
+
+  --color-cyan-400: #22e5d4;
+  --color-cyan-500: #0fd6c5;
+  --color-cyan-600: #00b8a9;
+
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+
+  --color-rose-400: #fb7185;
+  --color-rose-500: #f43f5e;
+
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+
+  --color-neon-pulse: #22e5d4;
+  --color-neural-violet: #8b5cf6;
+  --color-deep-space: #05060b;
+
+  /* Brighter, more vibrant palette */
+  --color-glass-surface: rgba(255, 255, 255, 0.08);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+  --color-neon-cyan: #00f2fe;
+  --color-neon-violet: #8a2be2;
+  --color-text-main: #ffffff;
+  --color-text-sub: #b0b8d1;
+
+  /* Animations */
+  --animate-pulse-slow: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-slide-up: slideUp 0.4s ease-out;
+  --animate-fade-in: fadeIn 0.3s ease-out;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-scan: scan 3s linear infinite;
+  --animate-morph: morph 8s ease-in-out infinite;
+  --animate-typewriter: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+
+
+  
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes scan {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { transform: translateY(100%); opacity: 0; }
+  }
+  @keyframes morph {
+    0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50% { border-radius: 30% 60% 70% 30% / 50% 60% 30% 60%; }
+  }
+}
+
+/* ─── Creative Effects ───────────────────────────────────────────────────── */
+
+/* 1. The "Neural" Mesh Background */
+.bg-mesh {
+  background-color: var(--void);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(34, 229, 212, 0.15) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(167, 139, 250, 0.1) 0, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(13, 15, 26, 1) 0, transparent 100%);
+}
+
+/* 2. Interactive "Cyber" Card */
+.cyber-card {
+  position: relative;
+  background: rgba(26, 30, 53, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.cyber-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  transition: 0.5s;
+}
+
+.cyber-card:hover {
+  border-color: var(--cyan);
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 10px 30px -10px rgba(34, 229, 212, 0.2);
+}
+
+.cyber-card:hover::after {
+  left: 100%;
+}
+
+/* 3. AI Scanning Line (Great for PDF processing states) */
+.scanner-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanner-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  animation: scan 2s infinite;
+  z-index: 10;
+}
+
+/* 4. Morphing AI Blob (Use as a decorative background element) */
+.ai-blob {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(45deg, var(--cyan), var(--violet));
+  filter: blur(40px);
+  opacity: 0.2;
+  animation: morph 8s ease-in-out infinite;
+}
+
+/* 5. Glowing Text Effect */
+.text-shimmer {
+  background: linear-gradient(90deg, var(--bright) 0%, var(--cyan) 50%, var(--bright) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* 6. Improved Glass Input */
+.input-glass {
+  background: rgba(18, 21, 43, 0.8);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(4px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-glass:focus {
+  border-color: var(--violet);
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.2);
+  outline: none;
+}
+
+/* 7. The "Data Stream" Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--border), var(--cyan));
+  border-radius: 10px;
+}
+
+/* 8. Modern Button - Neon Border */
+.btn-neon {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: transparent;
+  transition: 0.3s;
+  position: relative;
+}
+
+.btn-neon:hover {
+  background: var(--cyan);
+  color: var(--void);
+  box-shadow: 0 0 30px var(--cyan);
+}
+
+/* --- Advanced Glowing Inputs --- */
+.input-glass {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: var(--bright);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-glass:focus {
+  background: rgba(34, 229, 212, 0.05);
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(34, 229, 212, 0.15), inset 0 0 10px rgba(34, 229, 212, 0.05);
+  transform: translateY(-1px);
+}
+
+/* --- Smooth Sliding Logic --- */
+.auth-container {
+  display: flex;
+  width: 200%; /* Two pages wide */
+  transition: transform 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+.auth-slide-login { transform: translateX(0%); }
+.auth-slide-signup { transform: translateX(-50%); }
+
+/* 1. Brighter, High-Energy Background */
+.bg-neural-bright {
+  background: radial-gradient(circle at 0% 0%, #1a1c2c 0%, #090a0f 100%);
+  position: relative;
+}
+
+/* 2. Enhanced Visibility Inputs */
+.input-eye-catching {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  color: white !important;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-eye-catching::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input-eye-catching:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.2);
+  transform: scale(1.01);
+  outline: none;
+}
+
+/* 3. High-Contrast Text */
+.text-sharp {
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* 4. Sliding Animation Logic */
+.auth-slide-container {
+  display: flex;
+  width: 200%;
+  transition: transform 0.7s cubic-bezier(0.7, 0, 0.3, 1);
+}
+

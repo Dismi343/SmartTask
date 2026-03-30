@@ -112,4 +112,9 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByEmail(email);
 
     }
+
+    @Override
+    public ResponseUserDto findByEmail(String email) {
+        return toResponseUserDto(userRepo.findByEmail(email).orElseThrow(()->new EntryNotFoundException("No Customer")));
+    }
 }

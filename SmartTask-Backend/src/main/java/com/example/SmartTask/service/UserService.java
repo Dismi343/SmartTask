@@ -11,4 +11,5 @@ public interface UserService {
     public ResponseUserDto findUserById(String user_id);
     public PaginateUserDto searchAllUser(String searchText,int page, int size);
     public String userLogin(String email, String password);
+    public ResponseUserDto findByEmail(String email);
 }
