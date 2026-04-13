@@ -1,6 +1,7 @@
 package com.example.SmartTask.entity;
 
 import com.example.SmartTask.enums.TaskEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.apachecommons.CommonsLog;
@@ -28,5 +29,11 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name= "project_id", nullable = false)
+    @JsonIgnore
     private Project project;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 }

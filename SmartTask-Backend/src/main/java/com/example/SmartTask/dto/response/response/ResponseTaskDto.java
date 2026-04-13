@@ -2,7 +2,10 @@ package com.example.SmartTask.dto.response.response;
 
 
 import com.example.SmartTask.entity.Project;
+import com.example.SmartTask.entity.User;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,5 +18,6 @@ public class ResponseTaskDto {
     private String status;
     private String priority;
     private String deadline;
-    private Project project;
+    private User user;
+
 }

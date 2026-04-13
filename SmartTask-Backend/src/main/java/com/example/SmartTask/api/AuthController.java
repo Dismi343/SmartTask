@@ -11,6 +11,7 @@ import com.example.SmartTask.util.StandardResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-
+    private final JwtService jwtService;
     @PostMapping("/login")
     public ResponseEntity<StandardResponseDto> login(@RequestBody RequestLoginDto loginDto) {
         String token= userService.userLogin(loginDto.getEmail(), loginDto.getPassword());
@@ -32,5 +33,9 @@ public class AuthController {
                             "Login successful",200,loginResponse
                     ), HttpStatus.OK
             );
+    }
+    @GetMapping("/me")
+    public String getCurrentUser(Authentication authentication) {
+        return jwtService.getActiveUser();
     }
 }

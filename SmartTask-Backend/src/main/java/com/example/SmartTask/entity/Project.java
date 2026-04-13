@@ -26,11 +26,15 @@ public class Project {
     @Column(name="end_date",length=45, nullable = false)
     private LocalDate endDate;
 
-    @ManyToOne
-    @JoinColumn(name= "user_id", nullable = false)
-    private User user;
 
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
+    @ManyToMany
+    @JoinTable(
+            name = "project_users", // join table name
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> users;
 }

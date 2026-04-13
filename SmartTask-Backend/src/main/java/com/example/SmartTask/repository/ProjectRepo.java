@@ -6,8 +6,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface ProjectRepo extends JpaRepository<Project,String> {
     @Query(value = "SELECT * FROM projects WHERE project_name LIKE %?1% ", nativeQuery=true)
     Page<Project> searchAll(String searchText, Pageable pageable);
+
+    @Query("SELECT p FROM projects p JOIN p.users u WHERE u.user_id = :user_id")
+    Page<Project> findProjectsByUserId(
+            @Param("user_id") String user_id,
+            Pageable pageable
+    );
+
 }
+
+

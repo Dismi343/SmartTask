@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Eye, EyeOff, Zap, ArrowRight, AlertCircle, Cpu, ShieldCheck } from 'lucide-react';
 
-const ROLES = ['PM', 'Developer', 'Designer', 'QA Engineer', 'DevOps', 'Data Analyst', 'Tech Lead', 'Scrum Master'];
+const ROLES = ['Project Manager', 'Developer', 'Designer', 'QA Engineer', 'DevOps', 'Data Analyst', 'Tech Lead'];
 
 export default function SignupPage() {
   const { signup } = useApp();
