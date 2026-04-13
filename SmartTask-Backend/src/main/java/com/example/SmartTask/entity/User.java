@@ -1,10 +1,8 @@
 package com.example.SmartTask.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -28,6 +26,10 @@ public class User {
     @Column(name="role",length=45, nullable = false)
     private String role;
 
-    @OneToMany(mappedBy = "user" )
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
+
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
     private List<Project> projects;
 }

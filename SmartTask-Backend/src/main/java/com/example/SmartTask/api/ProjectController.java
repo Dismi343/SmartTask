@@ -78,4 +78,17 @@ public class ProjectController {
                 ), HttpStatus.OK
         );
     }
+
+    @GetMapping("/search-projects-by-user/{id}")
+    public ResponseEntity<StandardResponseDto> searchByUser(
+            @RequestParam int page,
+            @RequestParam int size,
+            @PathVariable String id
+    ){
+        return new ResponseEntity<>(
+                new StandardResponseDto(
+                        "project List",200,projectService.searchAllByUser(page,size,id)
+                ), HttpStatus.OK
+        );
+    }
 }

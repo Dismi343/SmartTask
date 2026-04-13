@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
+//                .projectlist(user.getProjects())
                 .build();
     }
 

@@ -17,10 +17,10 @@ export function AppProvider({ children }) {
     const token = localStorage.getItem('nexTask_token');
   if (savedUser && token) {
     setCurrentUser(JSON.parse(savedUser));
-  }
+  }  
   }, []);
 
-  const API_BASE_URL = 'http://localhost:5050/api/v1'; // Update with your backend URL
+  const API_BASE_URL = 'http://localhost:5050/api/v1'; 
 
     axios.interceptors.request.use((config) => {
       const token = localStorage.getItem('nexTask_token');

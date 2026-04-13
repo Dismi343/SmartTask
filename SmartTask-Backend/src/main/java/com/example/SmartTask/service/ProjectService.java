@@ -10,4 +10,5 @@ public interface ProjectService {
     public void update(RequestProjectDto dto,String id);
     public ResponseProjectDto findById(String id);
     public PaginateProjectDto searchAll(String searchText, int page, int size);
+    public PaginateProjectDto searchAllByUser( int page, int size,String user_id);
 }

@@ -37,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/login","/api/v1/users/search-users","/api/v1/users/create-user").permitAll() // allow the login endpoint without auth
+                        .requestMatchers("/api/v1/auth/**","/api/v1/users/search-users","/api/v1/users/create-user").permitAll() // allow the login endpoint without auth
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);

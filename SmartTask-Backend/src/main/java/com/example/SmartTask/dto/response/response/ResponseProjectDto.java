@@ -18,6 +18,6 @@ public class ResponseProjectDto {
     private String startDate;
     private String endDate;
 
-    private User user;
+    private List<User> userList;
     private List<Task> taskList;
 }
