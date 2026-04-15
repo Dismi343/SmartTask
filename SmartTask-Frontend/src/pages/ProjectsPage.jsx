@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { format, parseISO, differenceInDays } from 'date-fns';
@@ -116,11 +116,26 @@ function CreateProjectModal({ onClose }) {
 }
 
 export default function ProjectsPage() {
-  const { currentUser, getUserProjects, getProjectTasks } = useApp();
+  const { currentUser, projects, getProjectTasks } = useApp();
   const navigate = useNavigate();
   const [showCreate, setShowCreate] = useState(false);
+  //const [projects, setProjects] = useState([]);
 
-  const projects = getUserProjects(currentUser.user_id);
+//  useEffect(() => {
+//   if (!currentUser?.user_id) return;
+//   console.log('Loading projects for user:', currentUser.user_id);
+//   let cancelled = false;
+//   const loadProjects = async () => {
+//     const result = await getUserProjects(currentUser.user_id);
+//     console.log('Projects loaded:', result);
+//     if (!cancelled) setProjects(Array.isArray(result) ? result : []);
+//   };
+
+//   loadProjects();
+//   return () => { cancelled = true; };
+// }, [currentUser?.user_id]);
+
+//const projects = getUserProjects(currentUser?.user_id) || [];
 
   return (
     <div className="space-y-6 stagger">
@@ -186,7 +201,7 @@ export default function ProjectsPage() {
 
                 <div className="flex items-center justify-between text-xs text-ghost">
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1"><Users size={11} /> {project.memberIds.length}</span>
+                    <span className="flex items-center gap-1"><Users size={11} /> {project.userList.length}</span>
                     <span className="flex items-center gap-1"><FolderOpen size={11} /> {tasks.length} tasks</span>
                     {overdue > 0 && (
                       <span className="flex items-center gap-1 text-rose-400">

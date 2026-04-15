@@ -16,5 +16,5 @@ public class ResponseUserDto {
     private String email;
     private String password;
     private String role;
-//    private List<Project> projectlist;
+   private List<Project> projectlist;
 }

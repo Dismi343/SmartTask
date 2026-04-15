@@ -6,7 +6,7 @@ import { X, AlertTriangle, Calendar, Brain, Loader2, Zap, Activity, Cpu, ShieldC
 import clsx from 'clsx';
 
 const STATUS_OPTIONS = ['TODO', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
-const STATUS_LABELS = { TODO: 'To Do', IN_PROGRESS: 'Processing', COMPLETED: 'Synced', CANCELLED: 'Aborted' };
+const STATUS_LABELS = { TODO: 'To Do', IN_PROGRESS: 'Processing', COMPLETED: 'Completed', CANCELLED: 'Cancelled' };
 const PRIORITY_OPTIONS = ['LOW', 'MEDIUM', 'HIGH'];
 
 export default function TaskModal({ task, onClose }) {
@@ -35,7 +35,7 @@ export default function TaskModal({ task, onClose }) {
   };
 
   const handleSave = () => {
-    updateTask(task.task_id, { status: editStatus, priority: editPriority });
+    updateTask(task.task_id, { status: editStatus, priority: editPriority, deadline: task.deadline, taskTitle: task.taskTitle });
     onClose();
   };
 
@@ -72,8 +72,13 @@ export default function TaskModal({ task, onClose }) {
                 {task.taskTitle}
               </h2>
               <div className="flex items-center gap-4 text-xs font-mono text-white/30">
-                <span className="flex items-center gap-1.5"><Calendar size={12} /> Registered: {format(parseISO(task.deadline), 'MM.dd.yy')}</span>
+                <span className="flex items-center gap-1.5 text-red-400"><Calendar size={12} /> Deadline: {format(parseISO(task.deadline), 'MM.dd.yy')}</span>
                 <span className="flex items-center gap-1.5"><ShieldCheck size={12} /> Encrypted Session</span>
+              </div>
+              <div className="flex items-center gap-4 text-xs font-mono text-white/75 mt-3">
+                <span className="flex items-center gap-1.5 ">userName : {task.user.username} </span>
+                <span className="flex items-center gap-1.5 ">| </span>
+                <span className="flex items-center gap-1.5">role : {task.user.role}</span>
               </div>
             </div>
 
@@ -104,13 +109,14 @@ export default function TaskModal({ task, onClose }) {
               </div>
             </div>
 
+            {/* --- Add technical description if needed, backend should be edited first--- */}
             {/* Technical Description */}
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <label className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] block">Data Manifest</label>
               <div className="bg-white/5 border border-white/5 rounded-2xl p-5 text-sm text-white/60 leading-relaxed">
                 {task.description || "No manual data logs found for this node."}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* --- Right Sidebar: Parameters --- */}

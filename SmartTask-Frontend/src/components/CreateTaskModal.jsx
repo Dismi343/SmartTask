@@ -8,12 +8,11 @@ export default function CreateTaskModal({ projectId: initialProjectId, onClose }
   
   const [form, setForm] = useState({
     taskTitle: '',
-    description: '',
     status: 'TODO',
     priority: 'MEDIUM',
     deadline: '',
     project_id: initialProjectId || (projects[0]?.project_id || ''),
-    assigneeIds: [currentUser.user_id],
+    user_id: [currentUser.user_id],
   });
 
   const [error, setError] = useState('');
@@ -46,8 +45,7 @@ export default function CreateTaskModal({ projectId: initialProjectId, onClose }
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border/40 bg-surface/30">
           <div>
-            <h2 className="font-syne text-lg font-bold text-white tracking-tight">Initialize Task</h2>
-            <p className="text-[10px] font-mono text-ghost uppercase tracking-widest mt-1">System Entry // New_Task.exe</p>
+            <h2 className="font-syne text-lg font-bold text-white tracking-tight">Create New Task</h2>
           </div>
           <button onClick={onClose} className="text-ghost hover:text-bright transition-colors p-2 hover:bg-white/5 rounded-lg">
             <X size={20} />
@@ -126,7 +124,7 @@ export default function CreateTaskModal({ projectId: initialProjectId, onClose }
           </div>
 
           {/* Assignees */}
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <label className="text-[10px] font-mono text-ghost uppercase tracking-[0.2em] ml-1">Deploy Crew</label>
             <div className="flex flex-wrap gap-2">
               {users.map(u => {
@@ -151,20 +149,20 @@ export default function CreateTaskModal({ projectId: initialProjectId, onClose }
                 );
               })}
             </div>
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
           <div className="flex gap-3 pt-6 border-t border-border/30 mt-2">
             <button 
               type="button" 
               onClick={onClose} 
-              className="bg-ghost hover:bg-rose-700 hover:text-white flex-1 py-3 rounded-xl text-sm"
+              className="text-white bg-ghost hover:bg-rose-700 hover:text-white flex-1 py-3 rounded-xl text-sm"
             >
               Cancel
             </button>
             <button 
               type="submit" 
-              className="bg-emerald-400 hover:bg-emerald-500 flex-1 py-3 rounded-xl text-sm"
+              className="text-white bg-emerald-400 hover:bg-emerald-500 flex-1 py-3 rounded-xl text-sm"
             >
               Create Task
             </button>

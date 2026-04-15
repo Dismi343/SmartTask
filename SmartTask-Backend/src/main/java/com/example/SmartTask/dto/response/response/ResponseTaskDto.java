@@ -18,6 +18,7 @@ public class ResponseTaskDto {
     private String status;
     private String priority;
     private String deadline;
+    private String projectId;
     private User user;
 
 }

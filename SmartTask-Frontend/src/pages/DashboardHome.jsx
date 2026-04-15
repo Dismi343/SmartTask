@@ -183,7 +183,7 @@ export default function DashboardHome() {
                 Registry <ArrowRight size={14} />
               </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {myProjects.slice(0, 4).map(p => (
                 <button
                   key={p.project_id}
@@ -199,7 +199,7 @@ export default function DashboardHome() {
                   <ArrowRight size={16} className="text-white/20 group-hover:text-white group-hover:translate-x-1 transition-all" />
                 </button>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
