@@ -11,6 +11,7 @@ import com.example.SmartTask.entity.Task;
 import com.example.SmartTask.entity.User;
 import com.example.SmartTask.exception.EntryNotFoundException;
 import com.example.SmartTask.repository.ProjectRepo;
+import com.example.SmartTask.repository.TaskRepo;
 import com.example.SmartTask.repository.UserRepo;
 import com.example.SmartTask.service.JwtService;
 import com.example.SmartTask.service.ProjectService;
@@ -29,6 +30,7 @@ import java.util.UUID;
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepo projectRepo;
     private final UserRepo userRepo;
+    private final TaskRepo taskRepo;
 
     @Override
     public void save(RequestProjectDto dto) {
@@ -37,7 +39,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void delete(String id) {
-            projectRepo.deleteById(id);
+        taskRepo.deleteTasksByProjectId(id);
+        projectRepo.deleteById(id);
     }
 
     @Override

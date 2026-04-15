@@ -24,19 +24,22 @@ const SORT_OPTIONS = [
 const PRIORITY_RANK = { HIGH: 3, MEDIUM: 2, LOW: 1 };
 
 export default function TasksPage() {
-  const { currentUser, getUserTasks, getProjectById, getUserById, projects } = useApp();
+  const { currentUser, getUserTasks, getProjectById, getUserById, projects, tasks } = useApp();
   const [selectedTask, setSelectedTask] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const [filterStatus, setFilterStatus] = useState('ALL');
   const [sortBy, setSortBy] = useState('ai');
 
-  const rawTasks = getUserTasks(currentUser.user_id);
+  const rawTasks = (tasks || []).filter(t => (t.user?.user_id || t.user_id) === currentUser?.user_id);
   const prioritized = prioritizeTasks(rawTasks, null);
 
-  let tasks = filterStatus === 'ALL' ? prioritized : prioritized.filter(t => t.status === filterStatus);
+  let filteredTasks = filterStatus === 'ALL' ? prioritized : prioritized.filter(t => t.status === filterStatus);
 
-  if (sortBy === 'deadline') tasks = [...tasks].sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-  else if (sortBy === 'priority') tasks = [...tasks].sort((a, b) => (PRIORITY_RANK[b.priority] || 0) - (PRIORITY_RANK[a.priority] || 0));
+  if (sortBy === 'deadline') {
+    filteredTasks = [...filteredTasks].sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+  } else if (sortBy === 'priority') {
+    filteredTasks = [...filteredTasks].sort((a, b) => (PRIORITY_RANK[b.priority] || 0) - (PRIORITY_RANK[a.priority] || 0));
+  }
 
   const counts = FILTER_OPTIONS.reduce((acc, s) => {
     acc[s] = s === 'ALL' ? rawTasks.length : rawTasks.filter(t => t.status === s).length;
@@ -65,12 +68,12 @@ export default function TasksPage() {
           </p>
         </div>
 
-        <button 
+        {/* <button 
           onClick={() => setShowCreate(true)}
           className="bg-neon-violet hover:bg-neural-violet text-white px-4 py-2.5 rounded-xl text-sm flex items-center gap-2"
         >
           <Plus size={16} strokeWidth={3} /> New Task
-        </button>
+        </button> */}
       </div>
 
       {/* Critical Alerts */}
@@ -142,7 +145,7 @@ export default function TasksPage() {
       )}
 
       {/* Tasks Display */}
-      {tasks.length === 0 ? (
+      {filteredTasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 bg-surface/10 rounded-3xl border border-dashed border-border/20">
           <div className="p-4 bg-void rounded-full mb-4 border border-border/20">
             <CheckSquare size={32} className="text-ghost opacity-20" />
@@ -151,7 +154,7 @@ export default function TasksPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {tasks.map((task, i) => {
+          {filteredTasks.map((task, i) => {
             const project = getProjectById(task.project_id);
             return (
               <div key={task.task_id} className="group relative flex flex-col transition-all">

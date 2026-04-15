@@ -10,8 +10,7 @@ const PROJECT_COLORS = ['#22e5d4', '#a78bfa', '#fbbf24', '#fb7185', '#34d399', '
 function CreateProjectModal({ onClose }) {
   const { createProject, users, currentUser } = useApp();
   const [form, setForm] = useState({
-    projectName: '', description: '', startDate: '', endDate: '',
-    memberIds: [], color: PROJECT_COLORS[0],
+    projectName: '', description: '', startDate: '', endDate: '',users:[]
   });
   const [error, setError] = useState('');
 
@@ -19,7 +18,9 @@ function CreateProjectModal({ onClose }) {
   const toggleMember = (id) => {
     setForm(f => ({
       ...f,
-      memberIds: f.memberIds.includes(id) ? f.memberIds.filter(m => m !== id) : [...f.memberIds, id]
+      users: f.users.includes(id) 
+        ? f.users.filter(uid => uid !== id) 
+        : [...f.users, id]
     }));
   };
 
@@ -51,55 +52,59 @@ function CreateProjectModal({ onClose }) {
           <div>
             <label className="text-xs font-mono text-ghost uppercase tracking-widest mb-2 block">Project Name</label>
             <input type="text" value={form.projectName} onChange={e => update('projectName', e.target.value)}
-              placeholder="e.g. Nebula Dashboard v2" className="input-dark w-full px-4 py-3 rounded-xl text-sm" />
+              placeholder="e.g. Nebula Dashboard v2" className="text-white input-dark w-full px-4 py-3 rounded-xl text-sm" />
           </div>
 
           <div>
             <label className="text-xs font-mono text-ghost uppercase tracking-widest mb-2 block">Description</label>
             <textarea value={form.description} onChange={e => update('description', e.target.value)}
               placeholder="What is this project about?" rows={3}
-              className="input-dark w-full px-4 py-3 rounded-xl text-sm resize-none" />
+              className="text-white input-dark w-full px-4 py-3 rounded-xl text-sm resize-none" />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-mono text-ghost uppercase tracking-widest mb-2 block">Start Date</label>
               <input type="date" value={form.startDate} onChange={e => update('startDate', e.target.value)}
-                className="input-dark w-full px-4 py-3 rounded-xl text-sm" />
+                className="text-white/40 input-dark w-full px-4 py-3 rounded-xl text-sm" />
             </div>
             <div>
               <label className="text-xs font-mono text-ghost uppercase tracking-widest mb-2 block">End Date</label>
               <input type="date" value={form.endDate} onChange={e => update('endDate', e.target.value)}
-                className="input-dark w-full px-4 py-3 rounded-xl text-sm" />
+                className="text-white/40 input-dark w-full px-4 py-3 rounded-xl text-sm" />
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-mono text-ghost uppercase tracking-widest mb-2 block">Color</label>
-            <div className="flex gap-2">
-              {PROJECT_COLORS.map(c => (
-                <button key={c} type="button" onClick={() => update('color', c)}
-                  className={clsx('w-7 h-7 rounded-full border-2 transition-transform', form.color === c ? 'border-white scale-110' : 'border-transparent')}
-                  style={{ background: c }} />
-              ))}
-            </div>
+           
           </div>
 
           <div>
             <label className="text-xs font-mono text-ghost uppercase tracking-widest mb-2 block">Add Team Members</label>
             <div className="space-y-2">
-              {otherUsers.map(u => (
-                <button key={u.user_id} type="button" onClick={() => toggleMember(u.user_id)}
-                  className={clsx('w-full flex items-center gap-3 px-3 py-2 rounded-lg border text-sm transition-all text-left',
-                    form.memberIds.includes(u.user_id) ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-surface border-border text-dim hover:border-ghost')}>
+             {otherUsers.map(u => (
+                <button 
+                  key={u.user_id} 
+                  type="button" 
+                  onClick={() => toggleMember(u.user_id)}
+                  className={clsx(
+                    'w-full flex items-center gap-3 px-3 py-2 rounded-lg border text-sm transition-all text-left',
+                    // CHANGE: Use .some() to check for the ID inside the objects
+                    form.users.includes(u.user_id) 
+                      ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' 
+                      : 'bg-surface border-border text-dim hover:border-ghost'
+                  )}
+                >
                   <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-ghost to-muted flex items-center justify-center flex-shrink-0">
                     <span className="text-[10px] font-mono font-bold text-void">{u.avatar}</span>
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium">{u.username}</div>
+                    {/* Ensure casing matches your API (u.username) */}
+                    <div className="font-medium">{u.username || u.userName}</div>
                     <div className="text-xs text-ghost">{u.role}</div>
                   </div>
-                  {form.memberIds.includes(u.user_id) && <span className="text-xs">✓</span>}
+                  {/* CHANGE: Use .some() here as well */}
+                  {form.users.includes(u.user_id) && <span className="text-xs">✓</span>}
                 </button>
               ))}
             </div>
@@ -201,7 +206,7 @@ export default function ProjectsPage() {
 
                 <div className="flex items-center justify-between text-xs text-ghost">
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1"><Users size={11} /> {project.userList.length}</span>
+                    <span className="flex items-center gap-1"><Users size={11} /> {project?.userList?.length}</span>
                     <span className="flex items-center gap-1"><FolderOpen size={11} /> {tasks.length} tasks</span>
                     {overdue > 0 && (
                       <span className="flex items-center gap-1 text-rose-400">

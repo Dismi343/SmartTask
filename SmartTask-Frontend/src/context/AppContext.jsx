@@ -28,7 +28,6 @@ useEffect(()=>{
 
   const fetchProjects = async () => {
     let projectData = [];
-    
     // If user is PM, fetch all projects; otherwise fetch only their projects
     if (currentUser?.role === 'PM' || currentUser?.role === 'Project Manager') {
       // Call getAllProjects endpoint instead
@@ -39,7 +38,11 @@ useEffect(()=>{
       projectData = await getUserProjects(currentUser.user_id);
     }
     
-    const safeProjects = Array.isArray(projectData) ? projectData : [];
+    const safeProjects = Array.isArray(projectData) ? projectData.map(p => ({
+      ...p,
+      // Ensure userList exists and is an array
+      userList: p.userList || p.users || [] 
+    })) : [];
     setProjects(safeProjects);
     console.log("Fetched projects:", safeProjects);
         try{
@@ -71,7 +74,11 @@ useEffect(()=>{
         }catch(e){
           console.error("Error fetching tasks:", e);
         }
-      
+
+        const userList= await loadUsers();
+        setUsers(userList);
+        console.log("Fetched users:", userList);
+
     }
 
   fetchProjects();
@@ -87,6 +94,15 @@ useEffect(()=>{
       return config;
     });
 
+
+    const loadUsers = async ()=>{
+      try{
+        const res=await axios.get(`${API_BASE_URL}/users/search-users`,{params:{searchText:'',page:0,size:1000}});
+        return res.data.data.dataList;
+      }catch(e){
+        console.error("Error fetching users:", e);
+      }
+    }
   const login = async (email, password) => {
 
     try{
@@ -215,15 +231,35 @@ useEffect(()=>{
     addNotification('Task updated', 'success');
   };
 
-  const createProject = (projectData) => {
+  const createProject =async (projectData) => {
     const newProject = {
-      project_id: `p${Date.now()}`,
       ...projectData,
-      memberIds: [currentUser.user_id, ...(projectData.memberIds || [])],
+      users: [...(projectData.users || []), currentUser.user_id]
     };
     setProjects(prev => [...prev, newProject]);
+    try{
+      const res=await axios.post(`${API_BASE_URL}/projects/create-project`, newProject);
+      console.log("Project creation response:", res.data);
+    }catch(e){
+      console.error("Error creating project:", e);
+      addNotification('Failed to create project', 'error');
+    }
+
+    console.log("Creating project with data:", newProject);
     addNotification('Project created successfully', 'success');
     return newProject;
+  };
+
+  const deleteProject = async (projectId) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/projects/delete-project/${projectId}`);
+      setProjects(prev => prev.filter(p => p.project_id !== projectId));
+      setTasks(prev => prev.filter(t => t.project_id !== projectId));
+      addNotification('Project purged successfully', 'success');
+    } catch (e) {
+      console.error("Error deleting project:", e);
+      addNotification('Failed to delete project', 'error');
+    }
   };
 
   const addNotification = (message, type = 'info') => {
@@ -277,7 +313,7 @@ useEffect(()=>{
       notifications, setActiveProject,
       login, signup, logout,
       getUserProjects, getProjectTasks, getUserTasks,
-      updateTaskStatus, createTask, updateTask, createProject,
+      updateTaskStatus, createTask, updateTask, createProject, deleteProject,
       getUserById, getProjectById, addNotification,changeTaskStatus,getAllUsers,deleteTaskById
     }}>
       {children}

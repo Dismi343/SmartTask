@@ -166,9 +166,10 @@ function CreateTaskModal({ projectId, onClose }) {
 export default function ProjectDetailPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const { getProjectById, getProjectTasks, getUserById, currentUser } = useApp();
+  const { getProjectById, getProjectTasks, getUserById, currentUser, deleteProject } = useApp();
   const [selectedTask, setSelectedTask] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [viewMode, setViewMode] = useState('board');
   const [filterStatus, setFilterStatus] = useState('ALL');
 
@@ -177,6 +178,10 @@ export default function ProjectDetailPage() {
   const members = (project?.userList ?? []).filter(Boolean) || [];
   const [showCrewModal, setShowCrewModal] = useState(false);
 
+  const handleDeleteProject = () => {
+    deleteProject(projectId);
+    navigate('/dashboard/projects');
+  };
 
   if (!project) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] stagger">
@@ -228,12 +233,14 @@ console.log("tasks",allTasks)
           </div>
           
           <div className="flex items-center gap-3">
-            {/* <button 
-              onClick={() => navigate('/dashboard/projects/new')} // Assuming this route exists
-              className="btn-ghost px-5 py-2.5 rounded-xl text-[11px] font-mono tracking-widest uppercase flex items-center gap-2 border-border/40"
-            >
-              <FolderPlus size={15} /> New Project
-            </button> */}
+            
+              <button 
+                onClick={() => setShowDeleteConfirm(true)} 
+                className="text-white bg-rose-600/20 border border-rose-500/30 hover:bg-rose-600/40 px-5 py-2.5 rounded-xl text-[11px] font-mono tracking-widest uppercase flex items-center gap-2 transition-all shadow-lg shadow-rose-500/5 group"
+              >
+                <X size={15} className="group-hover:rotate-90 transition-transform" /> Delete Project
+              </button>
+           
             <button 
               onClick={() => setShowCreate(true)} 
               className="text-white bg-neon-violet px-5 py-2.5 rounded-xl text-[11px] font-mono tracking-widest uppercase flex items-center gap-2 shadow-lg shadow-cyan-500/10"
@@ -395,6 +402,37 @@ console.log("tasks",allTasks)
 
       {selectedTask && <TaskModal task={selectedTask} onClose={() => setSelectedTask(null)} />}
       {showCreate && <CreateTaskModal projectId={projectId} onClose={() => setShowCreate(false)} />}
+      
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 modal-backdrop z-[100] flex items-center justify-center p-4" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="w-full max-w-sm bg-abyss border border-rose-500/30 rounded-2xl overflow-hidden animate-slide-up shadow-2xl shadow-rose-900/20" onClick={e => e.stopPropagation()}>
+            <div className="p-8 text-center space-y-4">
+              <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                <AlertCircle size={32} className="text-rose-500" />
+              </div>
+              <h3 className="font-syne text-xl font-bold text-white tracking-tight">Delete Project?</h3>
+              <p className="text-ghost text-sm leading-relaxed">
+                This action is permanent. All tasks and data associated with <span className="text-white font-medium">{project.projectName}</span> will be purged.
+              </p>
+              
+              <div className="flex gap-3 pt-4">
+                <button 
+                  onClick={() => setShowDeleteConfirm(false)} 
+                  className="flex-1 px-4 py-3 rounded-xl border border-border/40 text-ghost text-xs font-mono uppercase tracking-widest hover:bg-surface/50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteProject}
+                  className="flex-1 px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-mono uppercase tracking-widest transition-colors shadow-lg shadow-rose-600/20"
+                >
+                  Purge Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
