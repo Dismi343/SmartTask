@@ -15,7 +15,7 @@ import { all } from 'axios';
 // --- CreateTaskModal (Updated Styles) ---
 
 function CreateTaskModal({ projectId, onClose }) {
-  const { createTask, users, currentUser, changeTaskStatus, getAllUsers,getProjectById } = useApp();
+  const { createTask, users, currentUser, changeTaskStatus, getAllUsers,getProjectById} = useApp();
   const [form, setForm] = useState({
     taskTitle: '', status: 'TODO', priority: 'MEDIUM',
     deadline: '', project_id: projectId, user_id: currentUser.user_id,
@@ -42,7 +42,7 @@ function CreateTaskModal({ projectId, onClose }) {
     assigneeIds: f.assigneeIds.includes(id) ? f.assigneeIds.filter(a => a !== id) : [...f.assigneeIds, id]
   }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
       e.preventDefault();
 
       if (!form.taskTitle.trim()) {
@@ -60,9 +60,10 @@ function CreateTaskModal({ projectId, onClose }) {
         deadline: `${form.deadline}T00:00:00`
       };
 
-      createTask(formattedForm);
+      await createTask(formattedForm);
       //console.log("Creating task with data:", formattedForm);
       onClose();
+      // window.location.reload();
   };
 
    const isPM = currentUser?.role === 'PM' || currentUser?.role === 'Project Manager';

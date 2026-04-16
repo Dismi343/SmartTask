@@ -37,8 +37,8 @@ export default function DashboardHome() {
   const stats = [
     { label: 'Neural Targets', value: insights.totalTasks, icon: Target, color: 'text-cyan-400', glow: 'shadow-[0_0_15px_rgba(34,229,212,0.2)]' },
     { label: 'Processed', value: insights.completedCount, icon: CheckCircle2, color: 'text-emerald-400', glow: 'shadow-[0_0_15px_rgba(52,211,153,0.2)]' },
-    { label: 'In-Sync', value: insights.inProgressCount, icon: Clock, color: 'text-violet-400', glow: 'shadow-[0_0_15px_rgba(167,139,250,0.2)]' },
-    { label: 'Conflict', value: insights.overdueCount, icon: AlertTriangle, color: 'text-rose-400', glow: 'shadow-[0_0_15px_rgba(251,113,133,0.2)]' },
+    { label: 'Progressing Tasks', value: insights.inProgressCount, icon: Clock, color: 'text-violet-400', glow: 'shadow-[0_0_15px_rgba(167,139,250,0.2)]' },
+    { label: 'Overdue', value: insights.overdueCount, icon: AlertTriangle, color: 'text-rose-400', glow: 'shadow-[0_0_15px_rgba(251,113,133,0.2)]' },
   ];
 
   return (
