@@ -25,7 +25,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function DashboardHome() {
-  const { currentUser, getUserProjects, getUserTasks, tasks } = useApp();
+  const { currentUser, getUserProjects, getUserTasks, tasks, projects } = useApp();
   const navigate = useNavigate();
   const [selectedTask, setSelectedTask] = useState(null);
 
@@ -183,8 +183,8 @@ export default function DashboardHome() {
                 Registry <ArrowRight size={14} />
               </button>
             </div>
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {myProjects.slice(0, 4).map(p => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {projects.slice(0, 4).map(p => (
                 <button
                   key={p.project_id}
                   onClick={() => navigate(`/dashboard/projects/${p.project_id}`)}
@@ -194,12 +194,12 @@ export default function DashboardHome() {
                   <div className="w-1.5 h-10 rounded-full shrink-0 shadow-[0_0_10px_rgba(255,255,255,0.1)]" style={{ background: p.color }} />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-white truncate group-hover:text-cyan-400 transition-colors uppercase tracking-tight">{p.projectName}</div>
-                    <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">{p.memberIds.length} Linked Nodes</div>
+                    <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">{p.userList?.length} Linked Nodes</div>
                   </div>
                   <ArrowRight size={16} className="text-white/20 group-hover:text-white group-hover:translate-x-1 transition-all" />
                 </button>
               ))}
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
