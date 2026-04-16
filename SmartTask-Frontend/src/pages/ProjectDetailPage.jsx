@@ -17,7 +17,7 @@ import { all } from 'axios';
 function CreateTaskModal({ projectId, onClose }) {
   const { createTask, users, currentUser, changeTaskStatus, getAllUsers,getProjectById} = useApp();
   const [form, setForm] = useState({
-    taskTitle: '', status: 'TODO', priority: 'MEDIUM',
+    taskTitle: '', description:'',status: 'TODO', priority: 'MEDIUM',
     deadline: '', project_id: projectId, user_id: currentUser.user_id,
   });
   const [error, setError] = useState('');
@@ -119,12 +119,12 @@ function CreateTaskModal({ projectId, onClose }) {
               placeholder="e.g., Implement Vector Search" className="input-dark w-full px-4 py-3 rounded-xl text-sm border-border/40 focus:border-cyan-500/50 transition-all bg-void/50" />
           </div>
 
-          {/* <div className="space-y-1.5">
+          <div className="space-y-1.5 text-white">
             <label className="text-[10px] font-mono text-ghost uppercase tracking-[0.2em] ml-1">Description</label>
             <textarea value={form.description} onChange={e => update('description', e.target.value)}
               placeholder="Context or acceptance criteria..." rows={3}
               className="input-dark w-full px-4 py-3 rounded-xl text-sm resize-none border-border/40 bg-void/50" />
-          </div> */}
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-1.5 text-white bg-void/50 p-4 rounded-xl border border-border/40">

@@ -72,19 +72,18 @@ function RiskMeter({ score, level }) {
 // --- Main Component ---
 
 export default function AIInsightsPage() {
-  const { currentUser, tasks, users, getUserProjects, getUserTasks, getUserById } = useApp();
+  const { currentUser, tasks, users, getUserProjects,projects, getUserTasks, getUserById } = useApp();
   const [aiSummary, setAiSummary] = useState('');
   const [loadingAI, setLoadingAI] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedUser, setSelectedUser] = useState(currentUser.user_id);
 
-  // Derived Data
-  const myProjects = getUserProjects(currentUser.user_id);
-  const myTasks = getUserTasks(selectedUser);
+    // Derived Data
+  const myTasks = getUserTasks(selectedUser) || [];
   const insights = generateProductivityInsights(tasks, selectedUser);
   const prioritized = prioritizeTasks(myTasks, null);
 
-  const allProjectTasks = myProjects.flatMap(p =>
+  const allProjectTasks = projects.flatMap(p =>
     tasks.filter(t => t.project_id === p.project_id)
   );
 

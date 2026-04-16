@@ -9,3 +9,10 @@ class Task(BaseModel):
 class ChatRequest(BaseModel):
     prompt: str
     tasks: Optional[List[Task]] = []
+
+class TaskInsightRequest(BaseModel):
+    taskTitle: str
+    status: str
+    priority: str
+    deadline: str
+    description: str

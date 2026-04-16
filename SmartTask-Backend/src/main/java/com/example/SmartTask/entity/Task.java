@@ -20,6 +20,8 @@ public class Task {
     private String task_id;
     @Column(name="task_title",length=45, nullable = false)
     private String taskTitle;
+    @Column(name="description", nullable = false)
+    private String taskDescription;
     @Column(name="status", nullable = false)
     private Enum<TaskEnum.Status> status;
     @Column(name="priority", nullable = false)

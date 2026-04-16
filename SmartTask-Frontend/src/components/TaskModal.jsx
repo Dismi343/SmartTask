@@ -4,6 +4,7 @@ import { predictDelayRisk, generateAIInsight } from '../utils/aiUtils';
 import { format, parseISO } from 'date-fns';
 import { X, AlertTriangle, Calendar, Brain, Loader2, Zap, Activity, Cpu, ShieldCheck } from 'lucide-react';
 import clsx from 'clsx';
+import axios from 'axios';
 
 const STATUS_OPTIONS = ['TODO', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
 const STATUS_LABELS = { TODO: 'To Do', IN_PROGRESS: 'Processing', COMPLETED: 'Completed', CANCELLED: 'Cancelled' };
@@ -26,12 +27,46 @@ export default function TaskModal({ task, onClose }) {
 
   const loadAIInsight = async () => {
     setLoadingAI(true);
-    const insight = await generateAIInsight(
-      'Analyze this task and provide a brief actionable recommendation for the team.',
-      { task: { title: task.taskTitle, status: task.status, priority: task.priority, deadline: task.deadline, description: task.description }, riskLevel: risk.level, daysRemaining: risk.score }
-    );
-    setAiInsight(insight);
+    // const insight = await generateAIInsight(
+    //   'Analyze this task and provide a brief actionable recommendation for the team.',
+    //   { task: { title: task.taskTitle, status: task.status, priority: task.priority, deadline: task.deadline, description: task.description }, riskLevel: risk.level, daysRemaining: risk.score }
+    // );
+    try{
+    const insight = await axios.post('http://127.0.0.1:8000/ai/task-insight',{
+      taskTitle: task.taskTitle,
+      status: task.status,
+      priority: task.priority,
+      deadline: task.deadline,
+      description: task.description
+    });
+    //console.log("AI Insight:", insight?.data?.response);
+    setAiInsight(insight?.data?.response);
     setLoadingAI(false);
+  }
+  catch(error){
+    console.error("Error fetching AI insight:", error);
+    setAiInsight("Unable to fetch AI insight at this time.");
+    setLoadingAI(false);
+    return;
+  }
+  
+  };
+
+  const parseAIInsight = (text) => {
+    if (!text) return null;
+    
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+    
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**') || part.startsWith('*') && part.endsWith('*')) {
+        return (
+          <span key={index} className="font-bold text-cyan-300 bg-cyan-500/20 px-1.5 py-0.5 rounded-md">
+            {part.slice(2, -2)}
+          </span>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
   };
 
   const handleSave = () => {
@@ -80,6 +115,9 @@ export default function TaskModal({ task, onClose }) {
                 <span className="flex items-center gap-1.5 ">| </span>
                 <span className="flex items-center gap-1.5">role : {task.user.role}</span>
               </div>
+              {/* <div className='text-s my-4  font-mono text-white rounded-l '>
+                {task.description}
+              </div> */}
             </div>
 
             {/* AI Core Intelligence Card */}
@@ -96,27 +134,44 @@ export default function TaskModal({ task, onClose }) {
                   </div>
                 </div>
                 
-                {loadingAI ? (
-                  <div className="flex items-center gap-3 text-white/40 font-mono text-xs py-2">
-                    <Loader2 size={16} className="animate-spin text-cyan-400" />
-                    Calculating logic paths...
-                  </div>
-                ) : (
-                  <p className="text-sm text-white/70 leading-relaxed font-medium bg-white/5 p-4 rounded-xl border border-white/5">
-                    {aiInsight}
-                  </p>
-                )}
+               {loadingAI ? (
+                        <div className="flex items-center gap-3 text-white/40 font-mono text-xs py-2">
+                          <Loader2 size={16} className="animate-spin text-cyan-400" />
+                          Calculating logic paths...
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {aiInsight ? (
+                            <>
+                              <div className="flex items-start gap-3 bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
+                                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center mt-0.5">
+                                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                                </div>
+                                <p className="text-sm text-white/80 leading-relaxed font-medium">
+                                  {parseAIInsight(aiInsight)}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2 text-[10px] text-white/40 font-mono">
+                                <span className="w-1 h-1 rounded-full bg-white/20" />
+                                AI analysis complete
+                              </div>
+                            </>
+                          ) : (
+                            <p className="text-sm text-white/50 italic">No insights available</p>
+                          )}
+                        </div>
+                      )}
               </div>
             </div>
 
             {/* --- Add technical description if needed, backend should be edited first--- */}
             {/* Technical Description */}
-            {/* <div className="space-y-4">
+            <div className="space-y-4">
               <label className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] block">Data Manifest</label>
               <div className="bg-white/5 border border-white/5 rounded-2xl p-5 text-sm text-white/60 leading-relaxed">
                 {task.description || "No manual data logs found for this node."}
               </div>
-            </div> */}
+            </div>
           </div>
 
           {/* --- Right Sidebar: Parameters --- */}
