@@ -137,12 +137,12 @@ export default function TasksPage() {
       </div>
 
       {/* AI Reasoning Context */}
-      {sortBy === 'ai' && (
+      {/* {sortBy === 'ai' && (
         <div className="flex items-center gap-3 px-4 py-2 bg-violet-500/5 border border-violet-500/20 rounded-xl w-fit">
           <Brain size={14} className="text-violet-400" />
           <span className="text-[10px] font-mono text-violet-300 uppercase tracking-widest">Neural Ranking Active: Prioritizing Risk & Impact</span>
         </div>
-      )}
+      )} */}
 
       {/* Tasks Display */}
       {filteredTasks.length === 0 ? (

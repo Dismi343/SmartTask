@@ -132,7 +132,7 @@ export default function DashboardHome() {
               </div>
             </div>
             <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-              {insights.completedCount} / {insights.totalTasks} Units Synced
+              {insights.completedCount} / {insights.totalTasks} Units Completed
             </p>
           </div>
         </div>
@@ -180,7 +180,7 @@ export default function DashboardHome() {
             <div className="flex items-center justify-between mb-4 px-2">
               <h2 className="font-syne font-bold text-xl text-white">Active Clusters</h2>
               <button onClick={() => navigate('/dashboard/projects')} className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2 hover:text-white transition-colors">
-                Registry <ArrowRight size={14} />
+                Active Projects <ArrowRight size={14} />
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -208,12 +208,12 @@ export default function DashboardHome() {
       <div className="pt-6">
         <div className="flex items-center justify-between mb-6 px-2">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            {/* <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)]">
               <Zap size={22} className="text-black fill-current" />
-            </div>
+            </div> */}
             <div>
               <h2 className="font-syne font-bold text-2xl text-white tracking-tighter uppercase">High-Yield Targets</h2>
-              <p className="text-[10px] font-mono text-white/30 tracking-widest uppercase mt-0.5">// prioritized via logic engine</p>
+              <p className="text-[10px] font-mono text-white/30 tracking-widest uppercase mt-0.5">prioritized via logic engine</p>
             </div>
           </div>
           <button onClick={() => navigate('/dashboard/tasks')} className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-bold text-white uppercase tracking-widest hover:bg-white hover:text-black transition-all">

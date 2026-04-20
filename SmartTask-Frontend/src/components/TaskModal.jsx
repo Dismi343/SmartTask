@@ -5,10 +5,12 @@ import { format, parseISO } from 'date-fns';
 import { X, AlertTriangle, Calendar, Brain, Loader2, Zap, Activity, Cpu, ShieldCheck } from 'lucide-react';
 import clsx from 'clsx';
 import axios from 'axios';
+import ReactMarkdown from "react-markdown";
 
 const STATUS_OPTIONS = ['TODO', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
 const STATUS_LABELS = { TODO: 'To Do', IN_PROGRESS: 'Processing', COMPLETED: 'Completed', CANCELLED: 'Cancelled' };
 const PRIORITY_OPTIONS = ['LOW', 'MEDIUM', 'HIGH'];
+
 
 export default function TaskModal({ task, onClose }) {
   const { getUserById, updateTask, getProjectById } = useApp();
@@ -147,8 +149,10 @@ export default function TaskModal({ task, onClose }) {
                                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center mt-0.5">
                                   <span className="w-2 h-2 rounded-full bg-cyan-400" />
                                 </div>
-                                <p className="text-sm text-white/80 leading-relaxed font-medium">
-                                  {parseAIInsight(aiInsight)}
+                                <p className="text-sm text-white/80 font-medium leading-relaxed whitespace-pre-line">
+                                <ReactMarkdown>
+                                  {aiInsight}
+                                </ReactMarkdown>
                                 </p>
                               </div>
                               <div className="flex items-center gap-2 text-[10px] text-white/40 font-mono">

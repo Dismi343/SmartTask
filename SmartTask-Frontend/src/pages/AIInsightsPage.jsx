@@ -18,6 +18,8 @@ import {
 } from 'recharts';
 import { productivityData, completionHistory } from '../data/mockData';
 import clsx from 'clsx';
+import axios from 'axios';
+import ReactMarkdown from "react-markdown";
 
 // --- Sub-components ---
 
@@ -125,17 +127,52 @@ export default function AIInsightsPage() {
   const loadAISummary = async () => {
     setLoadingAI(true);
     const user = getUserById(selectedUser);
+    //console.log('avg risk score',avgRisk);
+    console.log('insights', insights);
     try {
-      const summary = await generateAIInsight(
-        `Provide a personalized productivity coaching insight for ${user?.username}. Focus on their ${insights.completionRate}% completion rate.`,
-        {
-          user: { username: user?.username, role: user?.role },
-          metrics: insights,
-          topPriorityTask: prioritized[0]?.taskTitle,
-          avgRiskScore: avgRisk,
-        }
-      );
-      setAiSummary(summary);
+      // const summary = await generateAIInsight(
+      //   `Provide a personalized productivity coaching insight for ${user?.username}. Focus on their ${insights.completionRate}% completion rate.`,
+      //   {
+      //     user: { username: user?.username, role: user?.role },
+      //     metrics: insights,
+      //     topPriorityTask: prioritized[0]?.taskTitle,
+      //     avgRiskScore: avgRisk,
+      //   }
+      // );
+
+           // Prepare the payload
+    const payload = {
+      username: user?.userName,
+      userrole: user?.role,
+      completedcount: insights.completedCount,
+      completionrate: insights.completionRate,
+      inprogresscount: insights.inProgressCount,
+      overduecount: insights.overdueCount,
+      ontimerate: insights.onTimeRate,
+      totaltasks: insights.totalTasks,
+      topprioritytask: prioritized[0]?.taskTitle,
+      avgriskscore: avgRisk
+    };
+
+    // Print to console
+    console.log("AI Insight Data:", payload);
+
+      const summary = await axios.post('http://127.0.0.1:8000/ai/ai-insight',{
+        username: user?.userName,
+        userrole: user?.role,
+        completedcount: insights.completedCount,
+        completionrate: insights.completionRate,
+        inprogresscount: insights.inProgressCount,
+        overduecount: insights.overdueCount,
+        ontimerate: insights.onTimeRate,
+        totaltasks: insights.totalTasks,
+        topprioritytask: prioritized[0]?.taskTitle,
+        avgriskscore: avgRisk
+
+      })
+      console.log('AI Insight Response:', summary.data.response);
+      const aiText = summary.data?.response || summary.data?.content || "No insight generated.";
+      setAiSummary(aiText); 
     } catch (error) {
       setAiSummary("Unable to generate AI coaching at this moment. Please try again later.");
     } finally {
@@ -211,9 +248,11 @@ export default function AIInsightsPage() {
               <div className="h-2 bg-border rounded w-2/3 animate-pulse" />
             </div>
           ) : (
-            <p className="text-dim text-sm leading-relaxed max-w-3xl italic">
-              "{aiSummary || "Select a user to generate performance insights..."}"
-            </p>
+           <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
+            <ReactMarkdown>
+            {aiSummary}
+            </ReactMarkdown>
+          </p>
           )}
         </div>
       </div>
