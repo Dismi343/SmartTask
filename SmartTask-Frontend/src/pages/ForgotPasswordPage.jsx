@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <RefreshCcw size={18} className="animate-spin" />
-                      <span className="font-mono text-white/50 text-xs uppercase tracking-tighter">Decrypting...</span>
+                      <span className="font-mono text-white/50 text-xs uppercase tracking-tighter">Sending mail...</span>
                     </div>
                   ) : (
                     <>Send Recovery Link <ArrowLeft size={18} className="rotate-180" /></>
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
               </div>
               <h2 className="font-syne text-2xl font-bold text-white mb-3">Uplink Sent</h2>
               <p className="text-white/75 text-sm font-mono mb-8 leading-relaxed">
-                Recovery protocols have been dispatched to:<br/>
+                Password recovery mail has been sent to:<br/>
                 <span className="text-cyan-400">{email}</span>
               </p>
               <button 
