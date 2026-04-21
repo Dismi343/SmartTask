@@ -138,9 +138,10 @@ export default function DashboardHome() {
         </div>
 
         {/* --- Right Column: Output & Projects --- */}
+        {/* this section is commented out  because the tasks entity should be added some attributes such as createdat and so on..*/}
         <div className="lg:col-span-2 space-y-8">
           {/* Main Chart Card */}
-          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-xl">
+          {/* <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-xl">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="font-syne font-bold text-2xl text-white tracking-tight">Weekly Throughput</h2>
@@ -173,7 +174,7 @@ export default function DashboardHome() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </div> */}
 
           {/* Projects Slider-style List */}
           <div>

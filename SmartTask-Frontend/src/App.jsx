@@ -9,6 +9,8 @@ import TasksPage from './pages/TasksPage';
 import AIInsightsPage from "./pages/AIInsightsPage"
 import Notifications from './components/Notifications';
 import AuthPage from './pages/AuthPage';
+import PasswordResetPage from './pages/PasswordResetPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 function ProtectedRoute({ children }) {
   const { currentUser } = useApp();
@@ -35,6 +37,8 @@ function AppRoutes() {
           <Route path="tasks" element={<TasksPage />} />
           <Route path="ai-insights" element={<AIInsightsPage />} />
         </Route>
+        <Route path="/reset-password" element={<PasswordResetPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Routes>
     </>
   );

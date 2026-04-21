@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { mockUsers, mockProjects, mockTasks } from '../data/mockData';
 import axios from 'axios';
-import { set } from 'date-fns';
+import { add, set } from 'date-fns';
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
@@ -307,6 +307,32 @@ useEffect(()=>{
       addNotification('Failed to delete task', 'error');
     }
   }
+
+  const updatePassword = async(token, newPassword)=>{
+    try{
+      const response = await axios.post(`${API_BASE_URL}/auth/reset-password`, { 
+        token:token,
+        newPassword:newPassword
+       });
+       console.log("Password reset response:", response.data);
+       addNotification('Password updated successfully', 'success');
+    }catch(e){
+
+      console.error("Error updating password:", e);
+    }
+  }
+
+  const forgotPassword = async(email)=>{
+    try{
+      const response = await axios.post(`${API_BASE_URL}/auth/forgot-password`,null,{params:{email}});
+      console.log("Forgot password response:", response.data);
+      addNotification('Password reset link sent to your email', 'success');
+    }catch(e){
+      console.error("Error in forgot password:", e);
+       addNotification('Failed to send reset link', 'error');
+    }
+  }
+
   return (
     <AppContext.Provider value={{
       currentUser, users, projects, tasks, activeProject,
@@ -314,7 +340,7 @@ useEffect(()=>{
       login, signup, logout,
       getUserProjects, getProjectTasks, getUserTasks,
       updateTaskStatus, createTask, updateTask, createProject, deleteProject,
-      getUserById, getProjectById, addNotification,changeTaskStatus,getAllUsers,deleteTaskById
+      getUserById, getProjectById, addNotification,changeTaskStatus,getAllUsers,deleteTaskById,updatePassword,forgotPassword
     }}>
       {children}
     </AppContext.Provider>
