@@ -100,6 +100,10 @@ export default function AuthPage() {
                   )}
                 </button>
               </form>
+                <button onClick={()=>navigate("../forgot-password")} className="w-full mt-10 text-white/75 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors">
+                Forgot-password ? 
+              </button>
+
               <button onClick={() => setIsLogin(false)} className="w-full my-15 text-white/40 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors">
                 — Create New User —
               </button>

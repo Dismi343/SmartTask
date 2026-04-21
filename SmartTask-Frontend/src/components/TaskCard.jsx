@@ -6,15 +6,19 @@ import { Calendar, AlertTriangle, User, ChevronDown, Zap, Activity } from 'lucid
 import clsx from 'clsx';
 
 const STATUS_OPTIONS = ['TODO', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
-const STATUS_LABELS = { TODO: 'To Do', IN_PROGRESS: 'Processing', COMPLETED: 'Synced', CANCELLED: 'Aborted' };
+const STATUS_LABELS = { TODO: 'To Do', IN_PROGRESS: 'Processing', COMPLETED: 'Completed', CANCELLED: 'Cancelled' };
 const PRIORITY_LABELS = { LOW: 'Low', MEDIUM: 'Medium', HIGH: 'High' };
 
 export default function TaskCard({ task, onClick }) {
+    const { changeTaskStatus, deleteTaskById } = useApp();
   const { getUserById, updateTaskStatus } = useApp();
   const [showStatusMenu, setShowStatusMenu] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
-  const assignees = task.assigneeIds.map(id => getUserById(id)).filter(Boolean);
-  const risk = predictDelayRisk(task, assignees);
+const assigneeIds = Array.isArray(task.assigneeIds) 
+  ? task.assigneeIds 
+  : (task.user?.user_id ? [task.user.user_id] : []);
+const assignees = assigneeIds.map(id => getUserById(id)).filter(Boolean);  const risk = predictDelayRisk(task, assignees);
   const daysLeft = differenceInDays(parseISO(task.deadline), new Date());
 
   // High-contrast priority colors
@@ -24,10 +28,21 @@ export default function TaskCard({ task, onClick }) {
     LOW: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30',
   }[task.priority];
 
+ const handleStatusChange = async(taskId, newStatus)=>{
+    await changeTaskStatus(taskId,{ status: newStatus, priority: task.priority, deadline: task.deadline, taskTitle: task.taskTitle }); 
+    updateTaskStatus(task.task_id, newStatus);
+  }
+
+  const deleteTask = async(taskId) => {
+    console.log("Deleting task with ID:", taskId);
+    await deleteTaskById(taskId);
+    setTaskToDelete(null);
+  }
+
   return (
     <div
       className={clsx(
-        'group relative overflow-hidden bg-white/5 border backdrop-blur-xl rounded-[24px] p-5 cursor-pointer transition-all duration-300',
+        'group relative overflow-visible bg-white/5 border backdrop-blur-xl rounded-[24px] p-5 cursor-pointer transition-all duration-300',
         risk.level === 'high' 
           ? 'border-rose-500/40 shadow-[0_0_20px_rgba(244,63,94,0.1)] hover:border-rose-500' 
           : 'border-white/10 hover:border-cyan-400/50 hover:bg-white/10'
@@ -58,18 +73,21 @@ export default function TaskCard({ task, onClick }) {
             onClick={() => setShowStatusMenu(!showStatusMenu)}
             className="text-[10px] bg-white/10 hover:bg-white/20 border border-white/10 text-white px-3 py-1 rounded-lg font-mono font-bold flex items-center gap-2 transition-all"
           >
-            <div className={clsx('w-1.5 h-1.5 rounded-full', task.status === 'COMPLETED' ? 'bg-emerald-400' : 'bg-cyan-400 animate-pulse')} />
+            <div className={clsx('w-1.5 h-1.5 rounded-full overflow-visible', task.status === 'COMPLETED' ? 'bg-emerald-400' : 'bg-cyan-400 animate-pulse')} />
             {STATUS_LABELS[task.status]}
             <ChevronDown size={12} className="text-white/40" />
           </button>
           
           {showStatusMenu && (
-            <div className="absolute top-full left-0 mt-2 z-30 bg-[#0d0f1a] border border-white/10 rounded-xl overflow-hidden shadow-2xl min-w-[140px] backdrop-blur-xl">
+            <div className="absolute top-full left-0 mt-2 z-30 bg-[#0d0f1a] border border-white/10 rounded-xl overflow-visible shadow-2xl min-w-[140px] backdrop-blur-xl">
               {STATUS_OPTIONS.map(s => (
                 <button
                   key={s}
-                  onClick={() => { updateTaskStatus(task.task_id, s); setShowStatusMenu(false); }}
-                  className="w-full text-left px-4 py-2.5 text-[10px] text-white/60 hover:bg-white/10 hover:text-white transition-colors font-mono font-bold uppercase tracking-widest"
+                  onClick={(e) => { 
+                    e.stopPropagation();
+                    handleStatusChange(task.task_id, s); 
+                    setShowStatusMenu(false); }}
+                  className=" w-full text-left px-4 py-2.5 text-[10px] text-white/60 hover:bg-white/10 hover:text-white transition-colors font-mono font-bold uppercase tracking-widest"
                 >
                   {STATUS_LABELS[s]}
                 </button>
@@ -78,7 +96,7 @@ export default function TaskCard({ task, onClick }) {
           )}
         </div>
 
-        {risk.level !== 'none' && risk.level !== 'minimal' && (
+        {/* {risk.level !== 'none' && risk.level !== 'minimal' && (
           <div className={clsx(
             'text-[9px] px-2 py-1 rounded-lg font-mono font-bold uppercase tracking-tighter flex items-center gap-1.5 border',
             risk.level === 'high' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-white/5 border-white/10 text-white/40'
@@ -86,7 +104,15 @@ export default function TaskCard({ task, onClick }) {
             <Zap size={10} className={risk.level === 'high' ? 'fill-current' : ''} />
             {risk.level} Risk
           </div>
-        )}
+        )} */}
+
+        <button className='px-3 py-2 bg-white/10 text-white text-[10px] font-mono font-black uppercase tracking-[0.2em] rounded-xl hover:bg-red-400  transition-all flex items-center gap-2 '
+        onClick={(e)=>{
+          e.stopPropagation();
+          setTaskToDelete(task);
+        }}
+        >
+          Delete Task</button>
       </div>
 
       {/* Footer: Timeline & Nodes */}
@@ -120,6 +146,43 @@ export default function TaskCard({ task, onClick }) {
           )}
         </div>
       </div>
+      {taskToDelete && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-void p-6 rounded-xl border border-border/40 w-[300px] text-white">
+      
+      <h2 className="text-sm font-semibold mb-4">
+        Are you sure you want to delete this task?
+      </h2>
+
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setTaskToDelete(null);
+          }}
+          className="px-3 py-1.5 text-xs rounded-lg border border-border/40"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteTask(taskToDelete.task_id);
+            setTaskToDelete(null);
+
+          }}
+          className="px-3 py-1.5 text-xs rounded-lg bg-red-500 text-white"
+        >
+          Delete
+        </button>
+      </div>
+
     </div>
+  </div>
+)}
+    </div>
+
+    
   );
 }

@@ -18,6 +18,8 @@ import {
 } from 'recharts';
 import { productivityData, completionHistory } from '../data/mockData';
 import clsx from 'clsx';
+import axios from 'axios';
+import ReactMarkdown from "react-markdown";
 
 // --- Sub-components ---
 
@@ -72,19 +74,18 @@ function RiskMeter({ score, level }) {
 // --- Main Component ---
 
 export default function AIInsightsPage() {
-  const { currentUser, tasks, users, getUserProjects, getUserTasks, getUserById } = useApp();
+  const { currentUser, tasks, users, getUserProjects,projects, getUserTasks, getUserById } = useApp();
   const [aiSummary, setAiSummary] = useState('');
   const [loadingAI, setLoadingAI] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedUser, setSelectedUser] = useState(currentUser.user_id);
 
-  // Derived Data
-  const myProjects = getUserProjects(currentUser.user_id);
-  const myTasks = getUserTasks(selectedUser);
+    // Derived Data
+  const myTasks = getUserTasks(selectedUser) || [];
   const insights = generateProductivityInsights(tasks, selectedUser);
   const prioritized = prioritizeTasks(myTasks, null);
 
-  const allProjectTasks = myProjects.flatMap(p =>
+  const allProjectTasks = projects.flatMap(p =>
     tasks.filter(t => t.project_id === p.project_id)
   );
 
@@ -126,17 +127,42 @@ export default function AIInsightsPage() {
   const loadAISummary = async () => {
     setLoadingAI(true);
     const user = getUserById(selectedUser);
+    //console.log('avg risk score',avgRisk);
+    //console.log('insights', insights);
     try {
-      const summary = await generateAIInsight(
-        `Provide a personalized productivity coaching insight for ${user?.username}. Focus on their ${insights.completionRate}% completion rate.`,
-        {
-          user: { username: user?.username, role: user?.role },
-          metrics: insights,
-          topPriorityTask: prioritized[0]?.taskTitle,
-          avgRiskScore: avgRisk,
-        }
-      );
-      setAiSummary(summary);
+    
+    // const payload = {
+    //   username: user?.userName,
+    //   userrole: user?.role,
+    //   completedcount: insights.completedCount,
+    //   completionrate: insights.completionRate,
+    //   inprogresscount: insights.inProgressCount,
+    //   overduecount: insights.overdueCount,
+    //   ontimerate: insights.onTimeRate,
+    //   totaltasks: insights.totalTasks,
+    //   topprioritytask: prioritized[0]?.taskTitle,
+    //   avgriskscore: avgRisk
+    // };
+
+    // // Print to console
+    // console.log("AI Insight Data:", payload);
+
+      const summary = await axios.post('http://127.0.0.1:8000/ai/ai-insight',{
+        username: user?.userName,
+        userrole: user?.role,
+        completedcount: insights.completedCount,
+        completionrate: insights.completionRate,
+        inprogresscount: insights.inProgressCount,
+        overduecount: insights.overdueCount,
+        ontimerate: insights.onTimeRate,
+        totaltasks: insights.totalTasks,
+        topprioritytask: prioritized[0]?.taskTitle,
+        avgriskscore: avgRisk
+
+      })
+     // console.log('AI Insight Response:', summary.data.response);
+      const aiText = summary.data?.response || summary.data?.content || "No insight generated.";
+      setAiSummary(aiText); 
     } catch (error) {
       setAiSummary("Unable to generate AI coaching at this moment. Please try again later.");
     } finally {
@@ -151,8 +177,8 @@ export default function AIInsightsPage() {
   const TABS = [
     { id: 'overview', label: 'Overview', icon: Brain },
     { id: 'risks', label: 'Risk Analysis', icon: AlertTriangle },
-    { id: 'productivity', label: 'Productivity', icon: TrendingUp },
-    { id: 'prioritization', label: 'Task Priorities', icon: Zap },
+    // { id: 'productivity', label: 'Productivity', icon: TrendingUp },
+    // { id: 'prioritization', label: 'Task Priorities', icon: Zap },
   ];
 
   return (
@@ -212,9 +238,11 @@ export default function AIInsightsPage() {
               <div className="h-2 bg-border rounded w-2/3 animate-pulse" />
             </div>
           ) : (
-            <p className="text-dim text-sm leading-relaxed max-w-3xl italic">
-              "{aiSummary || "Select a user to generate performance insights..."}"
-            </p>
+           <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
+            <ReactMarkdown>
+            {aiSummary}
+            </ReactMarkdown>
+          </p>
           )}
         </div>
       </div>
@@ -355,7 +383,7 @@ export default function AIInsightsPage() {
         )}
 
         {/* ... Other tabs follow similar logic using myTasks and prioritized data ... */}
-        {activeTab === 'prioritization' && (
+        {/* {activeTab === 'prioritization' && (
            <div className="space-y-4 animate-slide-up">
               {prioritized.map((task, i) => (
                 <div key={task.task_id} className="bg-surface border border-border rounded-xl p-4 flex items-center gap-4 hover:border-cyan-500/30 transition-all">
@@ -376,7 +404,7 @@ export default function AIInsightsPage() {
                 </div>
               ))}
            </div>
-        )}
+        )} */}
       </div>
     </div>
   );

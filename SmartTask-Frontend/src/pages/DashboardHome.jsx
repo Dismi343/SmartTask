@@ -25,7 +25,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function DashboardHome() {
-  const { currentUser, getUserProjects, getUserTasks, tasks } = useApp();
+  const { currentUser, getUserProjects, getUserTasks, tasks, projects } = useApp();
   const navigate = useNavigate();
   const [selectedTask, setSelectedTask] = useState(null);
 
@@ -37,8 +37,8 @@ export default function DashboardHome() {
   const stats = [
     { label: 'Neural Targets', value: insights.totalTasks, icon: Target, color: 'text-cyan-400', glow: 'shadow-[0_0_15px_rgba(34,229,212,0.2)]' },
     { label: 'Processed', value: insights.completedCount, icon: CheckCircle2, color: 'text-emerald-400', glow: 'shadow-[0_0_15px_rgba(52,211,153,0.2)]' },
-    { label: 'In-Sync', value: insights.inProgressCount, icon: Clock, color: 'text-violet-400', glow: 'shadow-[0_0_15px_rgba(167,139,250,0.2)]' },
-    { label: 'Conflict', value: insights.overdueCount, icon: AlertTriangle, color: 'text-rose-400', glow: 'shadow-[0_0_15px_rgba(251,113,133,0.2)]' },
+    { label: 'Progressing Tasks', value: insights.inProgressCount, icon: Clock, color: 'text-violet-400', glow: 'shadow-[0_0_15px_rgba(167,139,250,0.2)]' },
+    { label: 'Overdue', value: insights.overdueCount, icon: AlertTriangle, color: 'text-rose-400', glow: 'shadow-[0_0_15px_rgba(251,113,133,0.2)]' },
   ];
 
   return (
@@ -132,15 +132,16 @@ export default function DashboardHome() {
               </div>
             </div>
             <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-              {insights.completedCount} / {insights.totalTasks} Units Synced
+              {insights.completedCount} / {insights.totalTasks} Units Completed
             </p>
           </div>
         </div>
 
         {/* --- Right Column: Output & Projects --- */}
+        {/* this section is commented out  because the tasks entity should be added some attributes such as createdat and so on..*/}
         <div className="lg:col-span-2 space-y-8">
           {/* Main Chart Card */}
-          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-xl">
+          {/* <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-xl">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="font-syne font-bold text-2xl text-white tracking-tight">Weekly Throughput</h2>
@@ -173,18 +174,18 @@ export default function DashboardHome() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </div> */}
 
           {/* Projects Slider-style List */}
           <div>
             <div className="flex items-center justify-between mb-4 px-2">
               <h2 className="font-syne font-bold text-xl text-white">Active Clusters</h2>
               <button onClick={() => navigate('/dashboard/projects')} className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-[0.2em] flex items-center gap-2 hover:text-white transition-colors">
-                Registry <ArrowRight size={14} />
+                Active Projects <ArrowRight size={14} />
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {myProjects.slice(0, 4).map(p => (
+              {projects.slice(0, 4).map(p => (
                 <button
                   key={p.project_id}
                   onClick={() => navigate(`/dashboard/projects/${p.project_id}`)}
@@ -194,7 +195,7 @@ export default function DashboardHome() {
                   <div className="w-1.5 h-10 rounded-full shrink-0 shadow-[0_0_10px_rgba(255,255,255,0.1)]" style={{ background: p.color }} />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-white truncate group-hover:text-cyan-400 transition-colors uppercase tracking-tight">{p.projectName}</div>
-                    <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">{p.memberIds.length} Linked Nodes</div>
+                    <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">{p.userList?.length} Linked Nodes</div>
                   </div>
                   <ArrowRight size={16} className="text-white/20 group-hover:text-white group-hover:translate-x-1 transition-all" />
                 </button>
@@ -208,12 +209,12 @@ export default function DashboardHome() {
       <div className="pt-6">
         <div className="flex items-center justify-between mb-6 px-2">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            {/* <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)]">
               <Zap size={22} className="text-black fill-current" />
-            </div>
+            </div> */}
             <div>
               <h2 className="font-syne font-bold text-2xl text-white tracking-tighter uppercase">High-Yield Targets</h2>
-              <p className="text-[10px] font-mono text-white/30 tracking-widest uppercase mt-0.5">// prioritized via logic engine</p>
+              <p className="text-[10px] font-mono text-white/30 tracking-widest uppercase mt-0.5">prioritized via logic engine</p>
             </div>
           </div>
           <button onClick={() => navigate('/dashboard/tasks')} className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-bold text-white uppercase tracking-widest hover:bg-white hover:text-black transition-all">

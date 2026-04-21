@@ -70,13 +70,14 @@ public class TaskServiceImpl implements TaskService {
             if(task==null) return null;
         String userEmail=jwtService.getActiveUser();
         User user= userRepo.findByEmail(userEmail).orElseThrow(() -> new EntryNotFoundException("User not found"));
-        if(user.getRole().equalsIgnoreCase("Project Manager")){
+        if(user.getRole().equalsIgnoreCase("Project Manager") || user.getRole().equalsIgnoreCase("PM")){
             user=userRepo.findById(task.getUser_id()).orElseThrow(() -> new EntryNotFoundException("User not found"));
         }
         Project project = projectRepo.findById(task.getProject_id()).orElseThrow(() -> new EntryNotFoundException("project not found"));
         return Task.builder()
                     .task_id(UUID.randomUUID().toString())
                     .taskTitle(task.getTaskTitle())
+                    .taskDescription(task.getDescription())
                     .status(task.getStatus())
                     .priority(task.getPriority())
                     .deadline(task.getDeadline())
@@ -91,9 +92,11 @@ public class TaskServiceImpl implements TaskService {
         return ResponseTaskDto.builder()
                 .task_id(task.getTask_id())
                 .taskTitle(task.getTaskTitle())
+                .description(task.getTaskDescription())
                 .status(String.valueOf(task.getStatus()))
                 .priority(String.valueOf(task.getPriority()))
                 .deadline(String.valueOf(task.getDeadline()))
+                .projectId(task.getProject().getProject_id())
                 .user(task.getUser())
                 .build();
     }

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class RequestTaskDto {
     private String taskTitle;
+    private String description;
     private TaskEnum.Status status;
     private TaskEnum.Priority priority;
     private LocalDateTime deadline;

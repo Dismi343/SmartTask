@@ -65,8 +65,8 @@ export default function DashboardLayout() {
             <Zap size={20} className="text-black fill-current group-hover:scale-110 transition-transform" />
           </div>
           <div>
-            <div className="font-extrabold text-xl text-white tracking-tighter uppercase">NexTask</div>
-            <div className="text-[9px] font-mono text-cyan-400 tracking-[0.3em] uppercase opacity-70">Neural Link v4</div>
+            <div className="font-extrabold text-xl text-white tracking-tighter uppercase">Smart-Task</div>
+            {/* <div className="text-[9px] font-mono text-cyan-400 tracking-[0.3em] uppercase opacity-70">Neural Link v4</div> */}
           </div>
           <button className="ml-auto lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
             <X size={20} />
@@ -153,15 +153,15 @@ export default function DashboardLayout() {
 
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end hidden sm:block">
-              <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Security Level</span>
+              <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Small steps lead to big milestones.</span>
               <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5 uppercase">
-                <Shield size={12} /> Class-A Encrypted
+                <Shield size={12} /> AI-Secured Workspace
               </span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white cursor-pointer transition-colors relative">
+            {/* <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white cursor-pointer transition-colors relative">
               <Cpu size={20} />
               <div className="absolute top-0 right-0 w-2 h-2 bg-cyan-400 rounded-full border-2 border-[#070810]" />
-            </div>
+            </div> */}
           </div>
         </header>
 

@@ -15,9 +15,11 @@ import java.util.List;
 public class ResponseTaskDto {
     private String task_id;
     private String taskTitle;
+    private String description;
     private String status;
     private String priority;
     private String deadline;
+    private String projectId;
     private User user;
 
 }

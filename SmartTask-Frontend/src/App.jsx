@@ -1,15 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
-import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardLayout from './components/DashboardLayout';
 import DashboardHome from './pages/DashboardHome';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import TasksPage from './pages/TasksPage';
-import AIInsightsPage from './pages/AIInsightsPage';
+import AIInsightsPage from "./pages/AIInsightsPage"
 import Notifications from './components/Notifications';
 import AuthPage from './pages/AuthPage';
+import PasswordResetPage from './pages/PasswordResetPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 function ProtectedRoute({ children }) {
   const { currentUser } = useApp();
@@ -36,6 +37,8 @@ function AppRoutes() {
           <Route path="tasks" element={<TasksPage />} />
           <Route path="ai-insights" element={<AIInsightsPage />} />
         </Route>
+        <Route path="/reset-password" element={<PasswordResetPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Routes>
     </>
   );
